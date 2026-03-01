@@ -102,7 +102,7 @@ export default function Page() {
       return;
     }
 
-    const phoneNumber = "5492346560671";
+    const phoneNumber = "5492346350776";
 
     const messageLines = Object.values(cart).map(
       (item) => `${item.quantity}x ${item.name}`
