@@ -14,7 +14,6 @@ const menuItems = [
     id: 1,
     name: "BURGER CHEESE",
     description: "Carne smasheada, 4 fetas de queso cheddar.",
-    extra: "SIN PAPAS",
     prices: { simple: 10000, doble: 12500 },
   },
   {
