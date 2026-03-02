@@ -9,7 +9,15 @@ type CartItem = {
   quantity: number;
 };
 
-const menuItems = [
+type MenuItem = {
+  id: number;
+  name: string;
+  description: string;
+  prices: { simple: number; doble: number; };
+  extra?: string;
+};
+
+const menuItems: MenuItem[] = [
   {
     id: 1,
     name: "BURGER CHEESE",
