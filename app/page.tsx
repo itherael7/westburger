@@ -256,7 +256,7 @@ Total: $${total}`;
               placeholder="Ingresá tu dirección"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl mb-4 font-sans bg-[#fff3df]"
+              className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
             />
           )}
 
