@@ -1,6 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
+import { Bebas_Neue } from "next/font/google";
+
+const bebas = Bebas_Neue({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 type CartItem = {
   id: string;
@@ -13,8 +20,7 @@ type MenuItem = {
   id: number;
   name: string;
   description: string;
-  prices: { simple: number; doble: number; };
-  extra?: string;
+  prices: { simple: number; doble: number };
 };
 
 const menuItems: MenuItem[] = [
@@ -33,7 +39,7 @@ const menuItems: MenuItem[] = [
   },
   {
     id: 4,
-    name: "CLASICA",
+    name: "CLÁSICA",
     description:
       "Carne smasheada, cheddar, lechuga, pepino encurtido, cebolla y salsa clásica.",
     prices: { simple: 10500, doble: 13000 },
@@ -56,12 +62,14 @@ const menuItems: MenuItem[] = [
 
 export default function Page() {
   const [cart, setCart] = useState<Record<string, CartItem>>({});
-  const [orderType, setOrderType] = useState<"delivery" | "takeaway" | null>(null);
+  const [orderType, setOrderType] =
+    useState<"delivery" | "takeaway" | null>(null);
   const [address, setAddress] = useState("");
+  const [productNotes, setProductNotes] = useState("");
+  const [deliveryInstructions, setDeliveryInstructions] = useState("");
 
   const addItem = (item: any, type: "simple" | "doble") => {
     const key = `${item.id}-${type}`;
-
     setCart((prev) => ({
       ...prev,
       [key]: {
@@ -75,7 +83,6 @@ export default function Page() {
 
   const removeItem = (key: string) => {
     if (!cart[key]) return;
-
     const newQuantity = cart[key].quantity - 1;
 
     if (newQuantity <= 0) {
@@ -85,10 +92,7 @@ export default function Page() {
     } else {
       setCart((prev) => ({
         ...prev,
-        [key]: {
-          ...prev[key],
-          quantity: newQuantity,
-        },
+        [key]: { ...prev[key], quantity: newQuantity },
       }));
     }
   };
@@ -103,7 +107,6 @@ export default function Page() {
 
   const handleOrder = () => {
     if (Object.keys(cart).length === 0 || !orderType) return;
-
     if (orderType === "delivery" && address.trim() === "") {
       alert("Por favor ingresá tu dirección.");
       return;
@@ -119,6 +122,8 @@ export default function Page() {
 
 Tipo: ${orderType.toUpperCase()}
 ${orderType === "delivery" ? `Dirección: ${address}` : ""}
+${deliveryInstructions ? `Instrucciones: ${deliveryInstructions}` : ""}
+${productNotes ? `Notas del producto: ${productNotes}` : ""}
 
 ${messageLines.join("\n")}
 
@@ -126,67 +131,83 @@ Subtotal: $${subtotal}
 Envio: $${deliveryCost}
 Total: $${total}`;
 
-    const encodedMessage = encodeURIComponent(message);
-
-    window.open(`https://wa.me/${phoneNumber}?text=${encodedMessage}`, "_blank");
+    window.open(
+      `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
+      "_blank"
+    );
   };
 
   return (
-    <div className="min-h-screen bg-[#f3e3cf] font-black">
+    <div className={`min-h-screen bg-[#e2bd7f] ${bebas.className}`}>
+      {/* 🔴 CHECKER REAL INTERCALADO */}
+      <div
+        className="w-full h-16"
+        style={{
+          backgroundImage: `
+            linear-gradient(45deg,#d63b2f 25%,transparent 25%),
+            linear-gradient(-45deg,#d63b2f 25%,transparent 25%),
+            linear-gradient(45deg,transparent 75%,#d63b2f 75%),
+            linear-gradient(-45deg,transparent 75%,#d63b2f 75%)
+          `,
+          backgroundSize: "32px 32px",
+          backgroundPosition: "0 0, 0 16px, 16px -16px, -16px 0px",
+          backgroundColor: "#D8B47A",
+        }}
+      />
 
-      {/* Patrón cuadriculado arriba */}
-      <div className="h-16 w-full bg-[#e53935] bg-[linear-gradient(45deg,#e53935_25%,transparent_25%,transparent_75%,#e53935_75%),linear-gradient(45deg,#e53935_25%,transparent_25%,transparent_75%,#e53935_75%)] bg-[size:40px_40px] bg-[position:0_0,20px_20px] opacity-40"></div>
-
-      <div className="max-w-2xl mx-auto px-4 py-8">
-
-        <div className="text-center mb-8">
-          <h1 className="text-4xl text-black">MENÚ</h1>
-          <div className="inline-block bg-[#e53935] px-6 py-2 rounded-lg mt-2 shadow-md">
-            <span className="text-3xl text-black">WEST BURGER</span>
-          </div>
+      <div className="max-w-2xl mx-auto px-4 py-6">
+        {/* LOGO */}
+        <div className="flex justify-center mb-8">
+          <Image
+            src="/logo.png"
+            alt="West Burger logo"
+            width={260}
+            height={260}
+            priority
+          />
         </div>
 
-        <div className="space-y-6">
+        {/* MENU CARD */}
+        <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md space-y-6">
           {menuItems.map((item) => (
-            <div key={item.id} className="border-b border-[#d9bfa3] pb-4">
+            <div key={item.id} className="border-b border-[#e0b97f] pb-6">
               <div className="flex justify-between gap-4">
                 <div>
-                  <h2 className="text-xl text-black">{item.name}</h2>
-                  <p className="text-sm text-black mt-1">
+                  <h2 className="text-3xl text-[#5a0f0f] tracking-wide">
+                    {item.name}
+                  </h2>
+                  <p className="text-base text-[#5a0f0f]/80 mt-1 normal-case font-sans">
                     {item.description}
                   </p>
-                  {item.extra && (
-                    <p className="text-sm mt-1 text-black">{item.extra}</p>
-                  )}
                 </div>
 
-                <div className="text-right text-[#e53935] text-sm">
-                  <div>Simple ${item.prices.simple}</div>
-                  <div>Doble ${item.prices.doble}</div>
+                <div className="text-right text-[#c53030] font-bold text-lg">
+                  <div>SIMPLE ${item.prices.simple}</div>
+                  <div>DOBLE ${item.prices.doble}</div>
                 </div>
               </div>
 
-              <div className="flex gap-3 mt-3">
+              <div className="flex gap-5 mt-4">
                 {(["simple", "doble"] as const).map((type) => {
                   const key = `${item.id}-${type}`;
                   return (
                     <div key={type} className="flex items-center gap-2">
                       <button
                         onClick={() => removeItem(key)}
-                        className="bg-white border px-3 rounded text-black"
+                        className="w-9 h-9 rounded-lg border-2 border-[#5a0f0f] bg-[#fff3df] text-[#5a0f0f] text-xl"
                       >
-                        -
+                        −
                       </button>
-                      <span className="text-black">
+                      <span className="w-8 text-center font-bold text-xl text-[#5a0f0f]">
                         {cart[key]?.quantity || 0}
                       </span>
                       <button
                         onClick={() => addItem(item, type)}
-                        className="bg-[#e53935] px-3 rounded text-black"
+                        className="w-9 h-9 rounded-lg bg-[#d63b2f] text-[#fff3df] text-xl"
                       >
                         +
                       </button>
-                      <span className="text-xs uppercase text-black">
+                      <span className="text-sm text-[#5a0f0f] uppercase">
                         {type}
                       </span>
                     </div>
@@ -197,17 +218,19 @@ Total: $${total}`;
           ))}
         </div>
 
-        <div className="mt-8 bg-white p-5 rounded-lg shadow-md">
+        {/* PEDIDO */}
+        <div className="mt-6 bg-[#f3d7a6] rounded-3xl p-6 shadow-md">
+          <h3 className="text-2xl text-[#5a0f0f] mb-4">
+            TIPO DE PEDIDO
+          </h3>
 
-          <h3 className="text-lg mb-3 text-black">TIPO DE PEDIDO</h3>
-
-          <div className="flex gap-3 mb-4">
+          <div className="flex gap-3 mb-6">
             <button
               onClick={() => setOrderType("takeaway")}
-              className={`flex-1 py-2 rounded border text-black ${
+              className={`flex-1 py-3 rounded-xl border-2 text-lg ${
                 orderType === "takeaway"
-                  ? "bg-[#e53935]"
-                  : "bg-white"
+                  ? "bg-[#d63b2f] text-[#fff3df]"
+                  : "text-[#5a0f0f] border-[#5a0f0f]"
               }`}
             >
               TAKE AWAY
@@ -215,10 +238,10 @@ Total: $${total}`;
 
             <button
               onClick={() => setOrderType("delivery")}
-              className={`flex-1 py-2 rounded border text-black ${
+              className={`flex-1 py-3 rounded-xl border-2 text-lg ${
                 orderType === "delivery"
-                  ? "bg-[#e53935]"
-                  : "bg-white"
+                  ? "bg-[#d63b2f] text-[#fff3df]"
+                  : "text-[#5a0f0f] border-[#5a0f0f]"
               }`}
             >
               DELIVERY (+$2500)
@@ -231,51 +254,61 @@ Total: $${total}`;
               placeholder="Ingresá tu dirección"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="w-full border p-2 rounded mb-4 text-black"
+              className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl mb-4 font-sans bg-[#fff3df]"
             />
           )}
 
-          <h3 className="text-lg mb-3 text-black">TU PEDIDO</h3>
-
-          {Object.keys(cart).length === 0 ? (
-            <p className="text-sm text-gray-500">No agregaste productos.</p>
-          ) : (
-            <div className="space-y-1 text-sm text-black">
-              {Object.values(cart).map((item) => (
-                <div key={item.id} className="flex justify-between">
-                  <span>
-                    {item.quantity}x {item.name}
-                  </span>
-                  <span>${item.price * item.quantity}</span>
-                </div>
-              ))}
+          {/* NOTAS */}
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <p className="text-[#5a0f0f] text-sm mb-1">
+                NOTAS SOBRE EL PRODUCTO (OPCIONAL)
+              </p>
+              <textarea
+                value={productNotes}
+                onChange={(e) => setProductNotes(e.target.value)}
+                className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
+                placeholder="Ej: sin papas..."
+              />
             </div>
-          )}
 
-          <div className="flex justify-between mt-3 text-sm text-black">
-            <span>Subtotal</span>
-            <span>${subtotal}</span>
+            <div>
+              <p className="text-[#5a0f0f] text-sm mb-1">
+                INSTRUCCIONES DE ENTREGA (OPCIONAL)
+              </p>
+              <textarea
+                value={deliveryInstructions}
+                onChange={(e) => setDeliveryInstructions(e.target.value)}
+                className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
+                placeholder="Ej: entre calles..."
+              />
+            </div>
           </div>
 
-          {orderType === "delivery" && (
-            <div className="flex justify-between text-sm text-black">
-              <span>Envío</span>
-              <span>$2500</span>
+          {/* 💰 RESUMEN EN VIVO */}
+          <div className="mb-6 bg-[#fff3df] border-2 border-[#5a0f0f] rounded-xl p-4 space-y-1">
+            <div className="flex justify-between text-[#5a0f0f] text-lg">
+              <span>SUBTOTAL</span>
+              <span>${subtotal}</span>
             </div>
-          )}
 
-          <div className="flex justify-between mt-2 border-t pt-2 text-black">
-            <span>TOTAL</span>
-            <span>${total}</span>
+            <div className="flex justify-between text-[#5a0f0f] text-lg">
+              <span>ENVÍO</span>
+              <span>${deliveryCost}</span>
+            </div>
+
+            <div className="flex justify-between text-[#5a0f0f] text-2xl font-bold border-t border-[#5a0f0f] pt-2 mt-2">
+              <span>TOTAL</span>
+              <span>${total}</span>
+            </div>
           </div>
 
           <button
             onClick={handleOrder}
-            className="w-full mt-4 bg-[#e53935] py-3 rounded-lg text-black shadow-md"
+            className="w-full bg-[#d63b2f] text-[#fff3df] py-4 rounded-xl text-2xl shadow-md"
           >
             HACER EL PEDIDO
           </button>
-
         </div>
       </div>
     </div>
