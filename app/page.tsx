@@ -256,7 +256,7 @@ Total: $${total}`;
               placeholder="Ingresá tu dirección"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
-              className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
+              className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl mb-4 font-sans bg-[#fff3df]"
             />
           )}
 
@@ -285,6 +285,18 @@ Total: $${total}`;
                 placeholder="Ej: entre calles..."
               />
             </div>
+          </div>
+
+          {/* 👤 NOMBRE Y APELLIDO */}
+          <div className="mb-6">
+            <p className="text-[#5a0f0f] text-sm mb-1">
+              NOMBRE Y APELLIDO
+            </p>
+            <input
+              type="text"
+              placeholder="Ej: Juan Pérez"
+              className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
+            />
           </div>
 
           {/* 💰 RESUMEN EN VIVO */}
