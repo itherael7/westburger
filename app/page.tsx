@@ -187,11 +187,15 @@ Total: $${total}`;
                 </div>
               </div>
 
-              <div className="flex gap-5 mt-4">
+              {/* ✅ FIX MOBILE */}
+              <div className="flex flex-wrap gap-5 mt-4">
                 {(["simple", "doble"] as const).map((type) => {
                   const key = `${item.id}-${type}`;
                   return (
-                    <div key={type} className="flex items-center gap-2">
+                    <div
+                      key={type}
+                      className="flex items-center gap-2 w-full sm:w-auto"
+                    >
                       <button
                         onClick={() => removeItem(key)}
                         className="w-9 h-9 rounded-lg border-2 border-[#5a0f0f] bg-[#fff3df] text-[#5a0f0f] text-xl"
@@ -207,7 +211,7 @@ Total: $${total}`;
                       >
                         +
                       </button>
-                      <span className="text-sm text-[#5a0f0f] uppercase">
+                      <span className="text-sm text-[#5a0f0f] uppercase min-w-[60px] text-left">
                         {type}
                       </span>
                     </div>
@@ -220,9 +224,7 @@ Total: $${total}`;
 
         {/* PEDIDO */}
         <div className="mt-6 bg-[#f3d7a6] rounded-3xl p-6 shadow-md">
-          <h3 className="text-2xl text-[#5a0f0f] mb-4">
-            TIPO DE PEDIDO
-          </h3>
+          <h3 className="text-2xl text-[#5a0f0f] mb-4">TIPO DE PEDIDO</h3>
 
           <div className="flex gap-3 mb-6">
             <button
