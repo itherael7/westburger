@@ -67,7 +67,7 @@ export default function Page() {
   const [address, setAddress] = useState("");
   const [productNotes, setProductNotes] = useState("");
   const [deliveryInstructions, setDeliveryInstructions] = useState("");
-
+  const [customerName, setCustomerName] = useState("");
   const addItem = (item: any, type: "simple" | "doble") => {
     const key = `${item.id}-${type}`;
     setCart((prev) => ({
@@ -119,6 +119,8 @@ export default function Page() {
     );
 
     const message = `Hola! Quiero hacer el siguiente pedido:
+
+Nombre y apellido: ${customerName || "-"}
 
 Tipo: ${orderType.toUpperCase()}
 ${orderType === "delivery" ? `Dirección: ${address}` : ""}
@@ -294,6 +296,8 @@ Total: $${total}`;
             </p>
             <input
               type="text"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
               placeholder="Ej: Juan Pérez"
               className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
             />
