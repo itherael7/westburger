@@ -199,28 +199,52 @@ Total: $${total}`;
 <div className="grid grid-cols-2 gap-4 mb-8">
 
   {/* COMBO SIMPLE */}
-  <div
-    onClick={() => setComboType("simple")}
-    className="bg-[#f3d7a6] rounded-3xl p-4 shadow-md cursor-pointer text-center"
-  >
-    <h3 className="text-2xl text-[#5a0f0f]">COMBO SIMPLE</h3>
-    <p className="text-sm text-[#5a0f0f]/80 font-sans mt-2">
-      Hamburguesa simple a elección + papas + gaseosa
-    </p>
-    <p className="text-xl text-[#c53030] mt-2">$12990</p>
+<div
+  onClick={() => setComboType("simple")}
+  className="bg-[#f3d7a6] rounded-3xl p-4 shadow-md cursor-pointer text-center hover:scale-105 transition"
+>
+
+  <div className="flex justify-center mb-3">
+    <Image
+      src="/combo-simple.jpg"
+      alt="Combo simple"
+      width={140}
+      height={140}
+    />
   </div>
 
+  <h3 className="text-2xl text-[#5a0f0f]">COMBO SIMPLE</h3>
+
+  <p className="text-sm text-[#5a0f0f]/80 font-sans mt-2">
+    Hamburguesa simple a elección + papas + gaseosa
+  </p>
+
+  <p className="text-xl text-[#c53030] mt-2">$12990</p>
+</div>
+
   {/* COMBO DOBLE */}
-  <div
-    onClick={() => setComboType("doble")}
-    className="bg-[#f3d7a6] rounded-3xl p-4 shadow-md cursor-pointer text-center"
-  >
-    <h3 className="text-2xl text-[#5a0f0f]">COMBO DOBLE</h3>
-    <p className="text-sm text-[#5a0f0f]/80 font-sans mt-2">
-      Hamburguesa doble a elección + papas + gaseosa
-    </p>
-    <p className="text-xl text-[#c53030] mt-2">$14990</p>
+<div
+  onClick={() => setComboType("doble")}
+  className="bg-[#f3d7a6] rounded-3xl p-4 shadow-md cursor-pointer text-center hover:scale-105 transition"
+>
+
+  <div className="flex justify-center mb-3">
+    <Image
+      src="/combo-doble.jpg"
+      alt="Combo doble"
+      width={140}
+      height={140}
+    />
   </div>
+
+  <h3 className="text-2xl text-[#5a0f0f]">COMBO DOBLE</h3>
+
+  <p className="text-sm text-[#5a0f0f]/80 font-sans mt-2">
+    Hamburguesa doble a elección + papas + gaseosa
+  </p>
+
+  <p className="text-xl text-[#c53030] mt-2">$14990</p>
+</div>
 
 </div>
 
