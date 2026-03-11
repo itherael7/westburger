@@ -203,10 +203,10 @@ Subtotal: $${subtotal}
 Envio: $${deliveryCost}
 Total: $${total}`;
 
-    window.open(
+    window.location.href =
       `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`,
       "_blank"
-    );
+    ;
   };
 
   return (
