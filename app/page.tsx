@@ -253,7 +253,7 @@ Total: $${total}`;
 
   <div className="flex justify-center mb-3">
     <Image
-      src="/combo-simple.jpg"
+      src="/combo-simple.png"
       alt="Combo simple"
       width={140}
       height={140}
@@ -277,7 +277,7 @@ Total: $${total}`;
 
   <div className="flex justify-center mb-3">
     <Image
-      src="/combo-doble.jpg"
+      src="/combo-doble.png"
       alt="Combo doble"
       width={140}
       height={140}
@@ -299,7 +299,7 @@ Total: $${total}`;
 {comboType && (
   <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md mb-6">
     <h3 className="text-2xl text-[#5a0f0f] mb-4 text-center">
-      ELEGÍ TU BURGER
+      ELEGÍ TU BURGER PARA EL COMBO
     </h3>
 
     <div className="space-y-2">
@@ -315,11 +315,11 @@ Total: $${total}`;
   hover:bg-[#fff3df] hover:scale-[1.02] transition-all duration-200"
 >
   <span
-    className="flex-1 cursor-pointer"
-    onClick={() => addCombo(burger)}
-  >
-    {burger.name}
-  </span>
+  className="flex-1 cursor-pointer text-[#5a0f0f]"
+  onClick={() => addCombo(burger)}
+>
+  {burger.name}
+</span>
 
   {count > 0 && (
     <div className="flex items-center gap-2">
@@ -339,8 +339,22 @@ Total: $${total}`;
   );
 })}
     </div>
-  </div>
+  
+</div>
 )}
+{/* TITULO BURGERS INDIVIDUALES */}
+<div className="text-center mt-8 mb-4">
+  <h2 className="text-3xl text-[#5a0f0f]">
+    BURGERS INDIVIDUALES
+  </h2>
+
+  <p className="text-sm text-[#5a0f0f]/80 font-sans">
+    Incluyen papas
+  </p>
+</div>
+
+{/* MENU CARD */}
+<div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md space-y-6"></div>
         {/* MENU CARD */}
         <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md space-y-6">
           {menuItems.map((item) => (
