@@ -91,6 +91,47 @@ export default function Page() {
       quantity: (prev[cartKey]?.quantity || 0) + 1,
     },
   }));
+};const removeCombo = (burger: MenuItem) => {
+  if (!comboType) return;
+
+  const key = `${comboType}-${burger.id}`;
+
+  setComboSelection((prev) => {
+    const newCount = (prev[key] || 0) - 1;
+
+    if (newCount <= 0) {
+      const updated = { ...prev };
+      delete updated[key];
+      return updated;
+    }
+
+    return {
+      ...prev,
+      [key]: newCount,
+    };
+  });
+
+  const cartKey = `combo-${comboType}-${burger.id}`;
+
+  setCart((prev) => {
+    if (!prev[cartKey]) return prev;
+
+    const newQuantity = prev[cartKey].quantity - 1;
+
+    if (newQuantity <= 0) {
+      const updated = { ...prev };
+      delete updated[cartKey];
+      return updated;
+    }
+
+    return {
+      ...prev,
+      [cartKey]: {
+        ...prev[cartKey],
+        quantity: newQuantity,
+      },
+    };
+  });
 };
 const comboPrices = {
   simple: 12990,
@@ -267,21 +308,34 @@ Total: $${total}`;
   const count = comboSelection[key] || 0;
 
   return (
-    <button
-      key={burger.id}
-      onClick={() => addCombo(burger)}
-      className="w-full border-2 border-[#5a0f0f] rounded-xl py-3 text-[#5a0f0f] 
-      flex justify-between items-center px-4
-      hover:bg-[#fff3df] hover:scale-[1.02] transition-all duration-200"
-    >
-      <span>{burger.name}</span>
+    <div
+  key={burger.id}
+  className="w-full border-2 border-[#5a0f0f] rounded-xl py-3 px-4
+  flex justify-between items-center
+  hover:bg-[#fff3df] hover:scale-[1.02] transition-all duration-200"
+>
+  <span
+    className="flex-1 cursor-pointer"
+    onClick={() => addCombo(burger)}
+  >
+    {burger.name}
+  </span>
 
-      {count > 0 && (
-        <span className="bg-[#d63b2f] text-white w-7 h-7 flex items-center justify-center rounded-full text-sm">
-          {count}
-        </span>
-      )}
-    </button>
+  {count > 0 && (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={() => removeCombo(burger)}
+        className="w-7 h-7 rounded-full border border-[#5a0f0f] text-[#5a0f0f]"
+      >
+        -
+      </button>
+
+      <span className="bg-[#d63b2f] text-white w-7 h-7 flex items-center justify-center rounded-full text-sm">
+        {count}
+      </span>
+    </div>
+  )}
+</div>
   );
 })}
     </div>
