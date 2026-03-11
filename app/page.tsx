@@ -342,6 +342,7 @@ Total: $${total}`;
 
 </div>
 )}
+
 {/* TITULO BURGERS INDIVIDUALES */}
 <div className="text-center mt-8 mb-10">
   <h2 className="text-4xl text-[#5a0f0f]">
@@ -352,8 +353,6 @@ Total: $${total}`;
   </p>
 </div>
 
-{/* MENU CARD */}
-<div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md space-y-6"></div>
         {/* MENU CARD */}
         <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md space-y-6">
           {menuItems.map((item) => (
