@@ -62,14 +62,20 @@ const menuItems: MenuItem[] = [
 
 export default function Page() {
   const [cart, setCart] = useState<Record<string, CartItem>>({});
+  const [comboType, setComboType] = useState<"simple" | "doble" | null>(null);
+
   const [orderType, setOrderType] =
     useState<"delivery" | "takeaway" | null>(null);
   const [address, setAddress] = useState("");
   const [productNotes, setProductNotes] = useState("");
   const [deliveryInstructions, setDeliveryInstructions] = useState("");
   const [customerName, setCustomerName] = useState("");
-  const addItem = (item: any, type: "simple" | "doble") => {
+
+  const COMBO_EXTRA = 3000;
+
+  const addItem = (item: MenuItem, type: "simple" | "doble") => {
     const key = `${item.id}-${type}`;
+
     setCart((prev) => ({
       ...prev,
       [key]: {
@@ -81,8 +87,27 @@ export default function Page() {
     }));
   };
 
+  const addCombo = (item: MenuItem) => {
+    if (!comboType) return;
+
+    const key = `combo-${item.id}-${comboType}`;
+
+    setCart((prev) => ({
+      ...prev,
+      [key]: {
+        id: key,
+        name: `COMBO ${comboType.toUpperCase()} - ${item.name}`,
+        price: item.prices[comboType] + COMBO_EXTRA,
+        quantity: (prev[key]?.quantity || 0) + 1,
+      },
+    }));
+
+    setComboType(null);
+  };
+
   const removeItem = (key: string) => {
     if (!cart[key]) return;
+
     const newQuantity = cart[key].quantity - 1;
 
     if (newQuantity <= 0) {
@@ -107,10 +132,6 @@ export default function Page() {
 
   const handleOrder = () => {
     if (Object.keys(cart).length === 0 || !orderType) return;
-    if (orderType === "delivery" && address.trim() === "") {
-      alert("Por favor ingresá tu dirección.");
-      return;
-    }
 
     const phoneNumber = "5492346350776";
 
@@ -120,17 +141,10 @@ export default function Page() {
 
     const message = `Hola! Quiero hacer el siguiente pedido:
 
-Nombre y apellido: ${customerName || "-"}
-
-Tipo: ${orderType.toUpperCase()}
-${orderType === "delivery" ? `Dirección: ${address}` : ""}
-${deliveryInstructions ? `Instrucciones: ${deliveryInstructions}` : ""}
-${productNotes ? `Notas del producto: ${productNotes}` : ""}
+Nombre: ${customerName}
 
 ${messageLines.join("\n")}
 
-Subtotal: $${subtotal}
-Envio: $${deliveryCost}
 Total: $${total}`;
 
     window.open(
@@ -141,23 +155,8 @@ Total: $${total}`;
 
   return (
     <div className={`min-h-screen bg-[#e2bd7f] ${bebas.className}`}>
-      {/* 🔴 CHECKER REAL INTERCALADO */}
-      <div
-        className="w-full h-16"
-        style={{
-          backgroundImage: `
-            linear-gradient(45deg,#d63b2f 25%,transparent 25%),
-            linear-gradient(-45deg,#d63b2f 25%,transparent 25%),
-            linear-gradient(45deg,transparent 75%,#d63b2f 75%),
-            linear-gradient(-45deg,transparent 75%,#d63b2f 75%)
-          `,
-          backgroundSize: "32px 32px",
-          backgroundPosition: "0 0, 0 16px, 16px -16px, -16px 0px",
-          backgroundColor: "#D8B47A",
-        }}
-      />
-
       <div className="max-w-2xl mx-auto px-4 py-6">
+
         {/* LOGO */}
         <div className="flex justify-center mb-8">
           <Image
@@ -169,16 +168,90 @@ Total: $${total}`;
           />
         </div>
 
-        {/* MENU CARD */}
+        {/* COMBOS */}
+        <div className="grid sm:grid-cols-2 gap-4 mb-8">
+
+          <div
+            onClick={() => setComboType("simple")}
+            className="bg-[#f3d7a6] rounded-3xl shadow-md overflow-hidden cursor-pointer"
+          >
+            <Image
+              src="/combo-simple.jpg"
+              alt="Combo Simple"
+              width={500}
+              height={400}
+              className="w-full h-[240px] object-cover"
+            />
+
+            <div className="p-4 text-center">
+              <h3 className="text-3xl text-[#5a0f0f]">
+                COMBO SIMPLE
+              </h3>
+
+              <p className="font-sans text-sm text-[#5a0f0f]/80">
+                Burger simple + papas + bebida
+              </p>
+            </div>
+          </div>
+
+          <div
+            onClick={() => setComboType("doble")}
+            className="bg-[#f3d7a6] rounded-3xl shadow-md overflow-hidden cursor-pointer"
+          >
+            <Image
+              src="/combo-doble.jpg"
+              alt="Combo Doble"
+              width={500}
+              height={400}
+              className="w-full h-[240px] object-cover"
+            />
+
+            <div className="p-4 text-center">
+              <h3 className="text-3xl text-[#5a0f0f]">
+                COMBO DOBLE
+              </h3>
+
+              <p className="font-sans text-sm text-[#5a0f0f]/80">
+                Burger doble + papas + bebida
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        {/* SELECTOR BURGER PARA COMBO */}
+        {comboType && (
+          <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md mb-8">
+            <h2 className="text-3xl text-[#5a0f0f] mb-4 text-center">
+              ELEGÍ TU BURGER
+            </h2>
+
+            <div className="space-y-3">
+              {menuItems.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => addCombo(item)}
+                  className="w-full border-2 border-[#5a0f0f] rounded-xl py-3 text-[#5a0f0f] text-lg"
+                >
+                  {item.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* MENU ORIGINAL */}
         <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md space-y-6">
           {menuItems.map((item) => (
             <div key={item.id} className="border-b border-[#e0b97f] pb-6">
+
               <div className="flex justify-between gap-4">
                 <div>
-                  <h2 className="text-3xl text-[#5a0f0f] tracking-wide">
+                  <h2 className="text-3xl text-[#5a0f0f]">
                     {item.name}
                   </h2>
-                  <p className="text-base text-[#5a0f0f]/80 mt-1 normal-case font-sans">
+
+                  <p className="text-base text-[#5a0f0f]/80 mt-1 font-sans">
                     {item.description}
                   </p>
                 </div>
@@ -189,145 +262,61 @@ Total: $${total}`;
                 </div>
               </div>
 
-              {/* ✅ FIX MOBILE */}
-              <div className="flex flex-wrap gap-5 mt-4">
+              <div className="flex gap-4 mt-4">
                 {(["simple", "doble"] as const).map((type) => {
                   const key = `${item.id}-${type}`;
+
                   return (
-                    <div
-                      key={type}
-                      className="flex items-center gap-2 w-full sm:w-auto"
-                    >
+                    <div key={type} className="flex items-center gap-2">
+
                       <button
                         onClick={() => removeItem(key)}
-                        className="w-9 h-9 rounded-lg border-2 border-[#5a0f0f] bg-[#fff3df] text-[#5a0f0f] text-xl"
+                        className="w-9 h-9 rounded-lg border-2 border-[#5a0f0f]"
                       >
                         −
                       </button>
+
                       <span className="w-8 text-center font-bold text-xl text-[#5a0f0f]">
                         {cart[key]?.quantity || 0}
                       </span>
+
                       <button
                         onClick={() => addItem(item, type)}
-                        className="w-9 h-9 rounded-lg bg-[#d63b2f] text-[#fff3df] text-xl"
+                        className="w-9 h-9 rounded-lg bg-[#d63b2f] text-white"
                       >
                         +
                       </button>
-                      <span className="text-sm text-[#5a0f0f] uppercase min-w-[60px] text-left">
+
+                      <span className="text-sm text-[#5a0f0f] uppercase">
                         {type}
                       </span>
+
                     </div>
                   );
                 })}
               </div>
+
             </div>
           ))}
         </div>
 
-        {/* PEDIDO */}
+        {/* TOTAL */}
         <div className="mt-6 bg-[#f3d7a6] rounded-3xl p-6 shadow-md">
-          <h3 className="text-2xl text-[#5a0f0f] mb-4">TIPO DE PEDIDO</h3>
 
-          <div className="flex gap-3 mb-6">
-            <button
-              onClick={() => setOrderType("takeaway")}
-              className={`flex-1 py-3 rounded-xl border-2 text-lg ${
-                orderType === "takeaway"
-                  ? "bg-[#d63b2f] text-[#fff3df]"
-                  : "text-[#5a0f0f] border-[#5a0f0f]"
-              }`}
-            >
-              TAKE AWAY
-            </button>
-
-            <button
-              onClick={() => setOrderType("delivery")}
-              className={`flex-1 py-3 rounded-xl border-2 text-lg ${
-                orderType === "delivery"
-                  ? "bg-[#d63b2f] text-[#fff3df]"
-                  : "text-[#5a0f0f] border-[#5a0f0f]"
-              }`}
-            >
-              DELIVERY (+$2500)
-            </button>
-          </div>
-
-          {orderType === "delivery" && (
-            <input
-              type="text"
-              placeholder="Ingresá tu dirección"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
-            />
-          )}
-
-          {/* NOTAS */}
-          <div className="grid md:grid-cols-2 gap-4 mb-6">
-            <div>
-              <p className="text-[#5a0f0f] text-sm mb-1">
-                NOTAS SOBRE EL PRODUCTO (OPCIONAL)
-              </p>
-              <textarea
-                value={productNotes}
-                onChange={(e) => setProductNotes(e.target.value)}
-                className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
-                placeholder="Ej: sin papas..."
-              />
-            </div>
-
-            <div>
-              <p className="text-[#5a0f0f] text-sm mb-1">
-                INSTRUCCIONES DE ENTREGA (OPCIONAL)
-              </p>
-              <textarea
-                value={deliveryInstructions}
-                onChange={(e) => setDeliveryInstructions(e.target.value)}
-                className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
-                placeholder="Ej: entre calles..."
-              />
-            </div>
-          </div>
-
-          {/* 👤 NOMBRE Y APELLIDO */}
-          <div className="mb-6">
-            <p className="text-[#5a0f0f] text-sm mb-1">
-              NOMBRE Y APELLIDO
-            </p>
-            <input
-              type="text"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
-              placeholder="Ej: Juan Pérez"
-              className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
-            />
-          </div>
-
-          {/* 💰 RESUMEN EN VIVO */}
-          <div className="mb-6 bg-[#fff3df] border-2 border-[#5a0f0f] rounded-xl p-4 space-y-1">
-            <div className="flex justify-between text-[#5a0f0f] text-lg">
-              <span>SUBTOTAL</span>
-              <span>${subtotal}</span>
-            </div>
-
-            <div className="flex justify-between text-[#5a0f0f] text-lg">
-              <span>ENVÍO</span>
-              <span>${deliveryCost}</span>
-            </div>
-
-            <div className="flex justify-between text-[#5a0f0f] text-2xl font-bold border-t border-[#5a0f0f] pt-2 mt-2">
-              <span>TOTAL</span>
-              <span>${total}</span>
-            </div>
+          <div className="flex justify-between text-[#5a0f0f] text-2xl font-bold">
+            <span>TOTAL</span>
+            <span>${total}</span>
           </div>
 
           <button
             onClick={handleOrder}
-            className="w-full bg-[#d63b2f] text-[#fff3df] py-4 rounded-xl text-2xl shadow-md"
+            className="w-full mt-4 bg-[#d63b2f] text-[#fff3df] py-4 rounded-xl text-2xl"
           >
             HACER EL PEDIDO
           </button>
+
         </div>
+
       </div>
     </div>
   );
