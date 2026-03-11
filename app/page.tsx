@@ -69,22 +69,28 @@ export default function Page() {
   const [deliveryInstructions, setDeliveryInstructions] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [comboType, setComboType] = useState<"simple" | "doble" | null>(null);
+  const [comboSelection, setComboSelection] = useState<Record<string, number>>({});
   const addCombo = (burger: MenuItem) => {
   if (!comboType) return;
 
-  const key = `combo-${comboType}-${burger.id}`;
+  const key = `${comboType}-${burger.id}`;
+
+  setComboSelection((prev) => ({
+    ...prev,
+    [key]: (prev[key] || 0) + 1,
+  }));
+
+  const cartKey = `combo-${comboType}-${burger.id}`;
 
   setCart((prev) => ({
     ...prev,
-    [key]: {
-      id: key,
+    [cartKey]: {
+      id: cartKey,
       name: `COMBO ${comboType.toUpperCase()} - ${burger.name}`,
       price: comboPrices[comboType],
-      quantity: (prev[key]?.quantity || 0) + 1,
+      quantity: (prev[cartKey]?.quantity || 0) + 1,
     },
   }));
-
-  setComboType(null);
 };
 const comboPrices = {
   simple: 12990,
@@ -256,15 +262,28 @@ Total: $${total}`;
     </h3>
 
     <div className="space-y-2">
-      {menuItems.map((burger) => (
-        <button
-          key={burger.id}
-          onClick={() => addCombo(burger)}
-          className="w-full border-2 border-[#5a0f0f] rounded-xl py-3 text-[#5a0f0f]"
-        >
-          {burger.name}
-        </button>
-      ))}
+      {menuItems.map((burger) => {
+  const key = `${comboType}-${burger.id}`;
+  const count = comboSelection[key] || 0;
+
+  return (
+    <button
+      key={burger.id}
+      onClick={() => addCombo(burger)}
+      className="w-full border-2 border-[#5a0f0f] rounded-xl py-3 text-[#5a0f0f] 
+      flex justify-between items-center px-4
+      hover:bg-[#fff3df] hover:scale-[1.02] transition-all duration-200"
+    >
+      <span>{burger.name}</span>
+
+      {count > 0 && (
+        <span className="bg-[#d63b2f] text-white w-7 h-7 flex items-center justify-center rounded-full text-sm">
+          {count}
+        </span>
+      )}
+    </button>
+  );
+})}
     </div>
   </div>
 )}
