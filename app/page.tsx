@@ -249,7 +249,12 @@ Total: $${total}`;
 <div
   onClick={() =>
   setComboType(comboType === "simple" ? null : "simple")}
-  className="bg-[#f3d7a6] rounded-3xl p-4 shadow-md cursor-pointer text-center hover:scale-105 transition"
+  className={`rounded-3xl p-4 shadow-md cursor-pointer text-center transition-all duration-300
+  ${
+    comboType === "simple"
+      ? "bg-[#d63b2f] text-white scale-105"
+      : "bg-[#f3d7a6] hover:scale-105"
+  }`}
 >
 
   <div className="flex justify-center mb-3">
@@ -274,7 +279,12 @@ Total: $${total}`;
 <div
   onClick={() =>
   setComboType(comboType === "doble" ? null : "doble")}
-  className="bg-[#f3d7a6] rounded-3xl p-4 shadow-md cursor-pointer text-center hover:scale-105 transition"
+  className={`rounded-3xl p-4 shadow-md cursor-pointer text-center transition-all duration-300
+  ${
+    comboType === "doble"
+      ? "bg-[#d63b2f] text-white scale-105"
+      : "bg-[#f3d7a6] hover:scale-105"
+  }`}
 >
 
   <div className="flex justify-center mb-3">
