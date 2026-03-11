@@ -247,7 +247,8 @@ Total: $${total}`;
 
   {/* COMBO SIMPLE */}
 <div
-  onClick={() => setComboType("simple")}
+  onClick={() =>
+  setComboType(comboType === "simple" ? null : "simple")}
   className="bg-[#f3d7a6] rounded-3xl p-4 shadow-md cursor-pointer text-center hover:scale-105 transition"
 >
 
@@ -271,7 +272,8 @@ Total: $${total}`;
 
   {/* COMBO DOBLE */}
 <div
-  onClick={() => setComboType("doble")}
+  onClick={() =>
+  setComboType(comboType === "doble" ? null : "doble")}
   className="bg-[#f3d7a6] rounded-3xl p-4 shadow-md cursor-pointer text-center hover:scale-105 transition"
 >
 
