@@ -457,7 +457,7 @@ Total: $${total}`;
           )}
 
           {/* NOTAS */}
-          <div className="grid md:grid-cols-2 gap-4 mb-6">
+          <div className="grid md:grid-cols-2 gap-4 mt- 6 mb-6">
             <div>
               <p className="text-[#5a0f0f] text-sm mb-1">
                 NOTAS SOBRE EL PRODUCTO (OPCIONAL)
