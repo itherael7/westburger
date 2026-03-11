@@ -238,7 +238,7 @@ Total: $${total}`;
           />
         </div>
 {/* HACE TU PEDIDO */}
-<h2 className="text-center text-4xl text-[#5a0f0f] mb-6">
+<h2 className="text-center text-5xl text-[#5a0f0f] mb-6">
   HACÉ TU PEDIDO
 </h2>
 
@@ -343,11 +343,10 @@ Total: $${total}`;
 </div>
 )}
 {/* TITULO BURGERS INDIVIDUALES */}
-<div className="text-center mt-8 mb-14">
+<div className="text-center mt-8 mb-10">
   <h2 className="text-4xl text-[#5a0f0f]">
     BURGERS INDIVIDUALES
   </h2>
-
   <p className="text-md text-[#5a0f0f]/70 font-sans">
     Incluyen papas
   </p>
