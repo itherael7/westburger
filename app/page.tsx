@@ -61,40 +61,35 @@ const menuItems: MenuItem[] = [
 ];
 
 export default function Page() {
-
   const [cart, setCart] = useState<Record<string, CartItem>>({});
-  const [comboSelect, setComboSelect] = useState<"simple" | "doble" | null>(null);
-
   const [orderType, setOrderType] =
     useState<"delivery" | "takeaway" | null>(null);
   const [address, setAddress] = useState("");
   const [productNotes, setProductNotes] = useState("");
   const [deliveryInstructions, setDeliveryInstructions] = useState("");
   const [customerName, setCustomerName] = useState("");
-
-  const COMBO_PRICE = {
-    simple: 12990,
-    doble: 14990,
-  };
-
+  const [comboType, setComboType] = useState<"simple" | "doble" | null>(null);
   const addCombo = (burger: MenuItem) => {
-    if (!comboSelect) return;
+  if (!comboType) return;
 
-    const key = `combo-${comboSelect}-${burger.id}`;
+  const key = `combo-${comboType}-${burger.id}`;
 
-    setCart((prev) => ({
-      ...prev,
-      [key]: {
-        id: key,
-        name: `COMBO ${comboSelect.toUpperCase()} - ${burger.name}`,
-        price: COMBO_PRICE[comboSelect],
-        quantity: (prev[key]?.quantity || 0) + 1,
-      },
-    }));
+  setCart((prev) => ({
+    ...prev,
+    [key]: {
+      id: key,
+      name: `COMBO ${comboType.toUpperCase()} - ${burger.name}`,
+      price: comboPrices[comboType],
+      quantity: (prev[key]?.quantity || 0) + 1,
+    },
+  }));
 
-    setComboSelect(null);
-  };
-
+  setComboType(null);
+};
+const comboPrices = {
+  simple: 12990,
+  doble: 14990,
+};
   const addItem = (item: any, type: "simple" | "doble") => {
     const key = `${item.id}-${type}`;
     setCart((prev) => ({
@@ -168,7 +163,7 @@ Total: $${total}`;
 
   return (
     <div className={`min-h-screen bg-[#e2bd7f] ${bebas.className}`}>
-
+      {/* 🔴 CHECKER REAL INTERCALADO */}
       <div
         className="w-full h-16"
         style={{
@@ -185,8 +180,8 @@ Total: $${total}`;
       />
 
       <div className="max-w-2xl mx-auto px-4 py-6">
-
-        <div className="flex justify-center mb-4">
+        {/* LOGO */}
+        <div className="flex justify-center mb-8">
           <Image
             src="/logo.png"
             alt="West Burger logo"
@@ -195,70 +190,61 @@ Total: $${total}`;
             priority
           />
         </div>
+{/* HACE TU PEDIDO */}
+<h2 className="text-center text-4xl text-[#5a0f0f] mb-6">
+  HACÉ TU PEDIDO
+</h2>
 
-        {/* HACÉ TU PEDIDO */}
-        <h2 className="text-center text-4xl text-[#5a0f0f] mb-6">
-          HACÉ TU PEDIDO
-        </h2>
+{/* COMBOS */}
+<div className="grid grid-cols-2 gap-4 mb-8">
 
-        {/* COMBOS */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
+  {/* COMBO SIMPLE */}
+  <div
+    onClick={() => setComboType("simple")}
+    className="bg-[#f3d7a6] rounded-3xl p-4 shadow-md cursor-pointer text-center"
+  >
+    <h3 className="text-2xl text-[#5a0f0f]">COMBO SIMPLE</h3>
+    <p className="text-sm text-[#5a0f0f]/80 font-sans mt-2">
+      Hamburguesa simple a elección + papas + gaseosa
+    </p>
+    <p className="text-xl text-[#c53030] mt-2">$12990</p>
+  </div>
 
-          <div
-            onClick={() => setComboSelect("simple")}
-            className="bg-[#f3d7a6] rounded-3xl shadow-md cursor-pointer overflow-hidden"
-          >
-            <Image
-              src="/simple.jpg"
-              alt="Combo simple"
-              width={400}
-              height={300}
-              className="w-full h-[170px] object-cover"
-            />
-            <div className="p-4 text-center text-[#5a0f0f] text-2xl">
-              COMBO SIMPLE
-            </div>
-          </div>
+  {/* COMBO DOBLE */}
+  <div
+    onClick={() => setComboType("doble")}
+    className="bg-[#f3d7a6] rounded-3xl p-4 shadow-md cursor-pointer text-center"
+  >
+    <h3 className="text-2xl text-[#5a0f0f]">COMBO DOBLE</h3>
+    <p className="text-sm text-[#5a0f0f]/80 font-sans mt-2">
+      Hamburguesa doble a elección + papas + gaseosa
+    </p>
+    <p className="text-xl text-[#c53030] mt-2">$14990</p>
+  </div>
 
-          <div
-            onClick={() => setComboSelect("doble")}
-            className="bg-[#f3d7a6] rounded-3xl shadow-md cursor-pointer overflow-hidden"
-          >
-            <Image
-              src="/doble.jpg"
-              alt="Combo doble"
-              width={400}
-              height={300}
-              className="w-full h-[170px] object-cover"
-            />
-            <div className="p-4 text-center text-[#5a0f0f] text-2xl">
-              COMBO DOBLE
-            </div>
-          </div>
+</div>
 
-        </div>
+{/* SELECTOR DE BURGER */}
+{comboType && (
+  <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md mb-6">
+    <h3 className="text-2xl text-[#5a0f0f] mb-4 text-center">
+      ELEGÍ TU BURGER
+    </h3>
 
-        {comboSelect && (
-          <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md mb-6">
-            <h3 className="text-2xl text-[#5a0f0f] mb-4 text-center">
-              ELEGÍ TU BURGER
-            </h3>
-
-            <div className="space-y-2">
-              {menuItems.map((burger) => (
-                <button
-                  key={burger.id}
-                  onClick={() => addCombo(burger)}
-                  className="w-full border-2 border-[#5a0f0f] rounded-xl py-3 text-[#5a0f0f]"
-                >
-                  {burger.name}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* MENU ORIGINAL (NO TOCADO) */}
+    <div className="space-y-2">
+      {menuItems.map((burger) => (
+        <button
+          key={burger.id}
+          onClick={() => addCombo(burger)}
+          className="w-full border-2 border-[#5a0f0f] rounded-xl py-3 text-[#5a0f0f]"
+        >
+          {burger.name}
+        </button>
+      ))}
+    </div>
+  </div>
+)}
+        {/* MENU CARD */}
         <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md space-y-6">
           {menuItems.map((item) => (
             <div key={item.id} className="border-b border-[#e0b97f] pb-6">
@@ -278,6 +264,7 @@ Total: $${total}`;
                 </div>
               </div>
 
+              {/* ✅ FIX MOBILE */}
               <div className="flex flex-wrap gap-5 mt-4">
                 {(["simple", "doble"] as const).map((type) => {
                   const key = `${item.id}-${type}`;
@@ -312,7 +299,110 @@ Total: $${total}`;
           ))}
         </div>
 
-        {/* TODO EL RESTO DE TU CÓDIGO (PEDIDO, NOTAS, TOTAL, WHATSAPP) SIGUE EXACTAMENTE IGUAL */}
+        {/* PEDIDO */}
+        <div className="mt-6 bg-[#f3d7a6] rounded-3xl p-6 shadow-md">
+          <h3 className="text-2xl text-[#5a0f0f] mb-4">TIPO DE PEDIDO</h3>
+
+          <div className="flex gap-3 mb-6">
+            <button
+              onClick={() => setOrderType("takeaway")}
+              className={`flex-1 py-3 rounded-xl border-2 text-lg ${
+                orderType === "takeaway"
+                  ? "bg-[#d63b2f] text-[#fff3df]"
+                  : "text-[#5a0f0f] border-[#5a0f0f]"
+              }`}
+            >
+              TAKE AWAY
+            </button>
+
+            <button
+              onClick={() => setOrderType("delivery")}
+              className={`flex-1 py-3 rounded-xl border-2 text-lg ${
+                orderType === "delivery"
+                  ? "bg-[#d63b2f] text-[#fff3df]"
+                  : "text-[#5a0f0f] border-[#5a0f0f]"
+              }`}
+            >
+              DELIVERY (+$2500)
+            </button>
+          </div>
+
+          {orderType === "delivery" && (
+            <input
+              type="text"
+              placeholder="Ingresá tu dirección"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
+            />
+          )}
+
+          {/* NOTAS */}
+          <div className="grid md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <p className="text-[#5a0f0f] text-sm mb-1">
+                NOTAS SOBRE EL PRODUCTO (OPCIONAL)
+              </p>
+              <textarea
+                value={productNotes}
+                onChange={(e) => setProductNotes(e.target.value)}
+                className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
+                placeholder="Ej: sin papas..."
+              />
+            </div>
+
+            <div>
+              <p className="text-[#5a0f0f] text-sm mb-1">
+                INSTRUCCIONES DE ENTREGA (OPCIONAL)
+              </p>
+              <textarea
+                value={deliveryInstructions}
+                onChange={(e) => setDeliveryInstructions(e.target.value)}
+                className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
+                placeholder="Ej: entre calles..."
+              />
+            </div>
+          </div>
+
+          {/* 👤 NOMBRE Y APELLIDO */}
+          <div className="mb-6">
+            <p className="text-[#5a0f0f] text-sm mb-1">
+              NOMBRE Y APELLIDO
+            </p>
+            <input
+              type="text"
+                value={customerName}
+                onChange={(e) => setCustomerName(e.target.value)}
+              placeholder="Ej: Juan Pérez"
+              className="w-full border-2 border-[#5a0f0f] p-3 rounded-xl font-sans bg-[#fff3df] text-[#5a0f0f] placeholder:text-[#5a0f0f]/50"
+            />
+          </div>
+
+          {/* 💰 RESUMEN EN VIVO */}
+          <div className="mb-6 bg-[#fff3df] border-2 border-[#5a0f0f] rounded-xl p-4 space-y-1">
+            <div className="flex justify-between text-[#5a0f0f] text-lg">
+              <span>SUBTOTAL</span>
+              <span>${subtotal}</span>
+            </div>
+
+            <div className="flex justify-between text-[#5a0f0f] text-lg">
+              <span>ENVÍO</span>
+              <span>${deliveryCost}</span>
+            </div>
+
+            <div className="flex justify-between text-[#5a0f0f] text-2xl font-bold border-t border-[#5a0f0f] pt-2 mt-2">
+              <span>TOTAL</span>
+              <span>${total}</span>
+            </div>
+          </div>
+
+          <button
+            onClick={handleOrder}
+            className="w-full bg-[#d63b2f] text-[#fff3df] py-4 rounded-xl text-2xl shadow-md"
+          >
+            HACER EL PEDIDO
+          </button>
+        </div>
       </div>
     </div>
   );
