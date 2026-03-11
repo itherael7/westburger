@@ -69,6 +69,7 @@ export default function Page() {
   const [deliveryInstructions, setDeliveryInstructions] = useState("");
   const [customerName, setCustomerName] = useState("");
   const [comboType, setComboType] = useState<"simple" | "doble" | null>(null);
+  const [animateBurger, setAnimateBurger] = useState(false)
   const [comboSelection, setComboSelection] = useState<Record<string, number>>({});
   const addCombo = (burger: MenuItem) => {
   if (!comboType) return;
@@ -318,7 +319,14 @@ Total: $${total}`;
 >
   <span
   className="flex-1 cursor-pointer text-[#5a0f0f]"
-  onClick={() => addCombo(burger)}
+  onClick={() => {
+  addCombo(burger)
+  setAnimateBurger(true)
+
+  setTimeout(() => {
+    setAnimateBurger(false)
+  }, 350)
+}}
 >
   {burger.name}
 </span>
