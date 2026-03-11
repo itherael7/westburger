@@ -344,7 +344,7 @@ Total: $${total}`;
 )}
 
 {/* TITULO BURGERS INDIVIDUALES */}
-<div className="text-center mt-8 mb-10">
+<div className="text-center mt-16 mb-8">
   <h2 className="text-4xl text-[#5a0f0f]">
     BURGERS INDIVIDUALES
   </h2>
