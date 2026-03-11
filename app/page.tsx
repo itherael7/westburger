@@ -61,7 +61,10 @@ const menuItems: MenuItem[] = [
 ];
 
 export default function Page() {
+
   const [cart, setCart] = useState<Record<string, CartItem>>({});
+  const [comboSelect, setComboSelect] = useState<"simple" | "doble" | null>(null);
+
   const [orderType, setOrderType] =
     useState<"delivery" | "takeaway" | null>(null);
   const [address, setAddress] = useState("");
@@ -69,9 +72,28 @@ export default function Page() {
   const [deliveryInstructions, setDeliveryInstructions] = useState("");
   const [customerName, setCustomerName] = useState("");
 
-  const [comboType, setComboType] = useState<"simple" | "doble" | null>(null);
+  const COMBO_PRICE = {
+    simple: 12990,
+    doble: 14990,
+  };
 
-  const COMBO_EXTRA = 3000;
+  const addCombo = (burger: MenuItem) => {
+    if (!comboSelect) return;
+
+    const key = `combo-${comboSelect}-${burger.id}`;
+
+    setCart((prev) => ({
+      ...prev,
+      [key]: {
+        id: key,
+        name: `COMBO ${comboSelect.toUpperCase()} - ${burger.name}`,
+        price: COMBO_PRICE[comboSelect],
+        quantity: (prev[key]?.quantity || 0) + 1,
+      },
+    }));
+
+    setComboSelect(null);
+  };
 
   const addItem = (item: any, type: "simple" | "doble") => {
     const key = `${item.id}-${type}`;
@@ -84,24 +106,6 @@ export default function Page() {
         quantity: (prev[key]?.quantity || 0) + 1,
       },
     }));
-  };
-
-  const addComboBurger = (item: MenuItem) => {
-    if (!comboType) return;
-
-    const key = `combo-${item.id}-${comboType}`;
-
-    setCart((prev) => ({
-      ...prev,
-      [key]: {
-        id: key,
-        name: `COMBO ${comboType.toUpperCase()} - ${item.name}`,
-        price: item.prices[comboType] + COMBO_EXTRA,
-        quantity: (prev[key]?.quantity || 0) + 1,
-      },
-    }));
-
-    setComboType(null);
   };
 
   const removeItem = (key: string) => {
@@ -192,85 +196,77 @@ Total: $${total}`;
           />
         </div>
 
-        <h1 className="text-center text-4xl text-[#5a0f0f] mb-6 tracking-wide">
+        {/* HACÉ TU PEDIDO */}
+        <h2 className="text-center text-4xl text-[#5a0f0f] mb-6">
           HACÉ TU PEDIDO
-        </h1>
+        </h2>
 
         {/* COMBOS */}
-
-        <div className="grid grid-cols-2 gap-4 mb-8">
+        <div className="grid grid-cols-2 gap-4 mb-6">
 
           <div
-            onClick={() => setComboType("simple")}
-            className="bg-[#f3d7a6] rounded-3xl overflow-hidden shadow-md cursor-pointer"
+            onClick={() => setComboSelect("simple")}
+            className="bg-[#f3d7a6] rounded-3xl shadow-md cursor-pointer overflow-hidden"
           >
             <Image
               src="/simple.jpg"
-              alt="combo simple"
+              alt="Combo simple"
               width={400}
               height={300}
-              className="w-full h-[200px] object-cover"
+              className="w-full h-[170px] object-cover"
             />
-
-            <div className="p-3 text-center text-[#5a0f0f] text-2xl">
+            <div className="p-4 text-center text-[#5a0f0f] text-2xl">
               COMBO SIMPLE
             </div>
           </div>
 
           <div
-            onClick={() => setComboType("doble")}
-            className="bg-[#f3d7a6] rounded-3xl overflow-hidden shadow-md cursor-pointer"
+            onClick={() => setComboSelect("doble")}
+            className="bg-[#f3d7a6] rounded-3xl shadow-md cursor-pointer overflow-hidden"
           >
             <Image
               src="/doble.jpg"
-              alt="combo doble"
+              alt="Combo doble"
               width={400}
               height={300}
-              className="w-full h-[200px] object-cover"
+              className="w-full h-[170px] object-cover"
             />
-
-            <div className="p-3 text-center text-[#5a0f0f] text-2xl">
+            <div className="p-4 text-center text-[#5a0f0f] text-2xl">
               COMBO DOBLE
             </div>
           </div>
 
         </div>
 
-        {comboType && (
+        {comboSelect && (
           <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md mb-6">
-            <h2 className="text-3xl text-[#5a0f0f] mb-4 text-center">
+            <h3 className="text-2xl text-[#5a0f0f] mb-4 text-center">
               ELEGÍ TU BURGER
-            </h2>
+            </h3>
 
             <div className="space-y-2">
-              {menuItems.map((item) => (
+              {menuItems.map((burger) => (
                 <button
-                  key={item.id}
-                  onClick={() => addComboBurger(item)}
-                  className="w-full border-2 border-[#5a0f0f] rounded-xl py-3 text-[#5a0f0f] text-lg"
+                  key={burger.id}
+                  onClick={() => addCombo(burger)}
+                  className="w-full border-2 border-[#5a0f0f] rounded-xl py-3 text-[#5a0f0f]"
                 >
-                  {item.name}
+                  {burger.name}
                 </button>
               ))}
             </div>
           </div>
         )}
 
-        {/* MENU ORIGINAL */}
-
+        {/* MENU ORIGINAL (NO TOCADO) */}
         <div className="bg-[#f3d7a6] rounded-3xl p-6 shadow-md space-y-6">
-
           {menuItems.map((item) => (
-
             <div key={item.id} className="border-b border-[#e0b97f] pb-6">
-
               <div className="flex justify-between gap-4">
-
                 <div>
                   <h2 className="text-3xl text-[#5a0f0f] tracking-wide">
                     {item.name}
                   </h2>
-
                   <p className="text-base text-[#5a0f0f]/80 mt-1 normal-case font-sans">
                     {item.description}
                   </p>
@@ -280,60 +276,44 @@ Total: $${total}`;
                   <div>SIMPLE ${item.prices.simple}</div>
                   <div>DOBLE ${item.prices.doble}</div>
                 </div>
-
               </div>
 
               <div className="flex flex-wrap gap-5 mt-4">
-
                 {(["simple", "doble"] as const).map((type) => {
-
                   const key = `${item.id}-${type}`;
-
                   return (
-
                     <div
                       key={type}
                       className="flex items-center gap-2 w-full sm:w-auto"
                     >
-
                       <button
                         onClick={() => removeItem(key)}
                         className="w-9 h-9 rounded-lg border-2 border-[#5a0f0f] bg-[#fff3df] text-[#5a0f0f] text-xl"
                       >
                         −
                       </button>
-
                       <span className="w-8 text-center font-bold text-xl text-[#5a0f0f]">
                         {cart[key]?.quantity || 0}
                       </span>
-
                       <button
                         onClick={() => addItem(item, type)}
                         className="w-9 h-9 rounded-lg bg-[#d63b2f] text-[#fff3df] text-xl"
                       >
                         +
                       </button>
-
                       <span className="text-sm text-[#5a0f0f] uppercase min-w-[60px] text-left">
                         {type}
                       </span>
-
                     </div>
-
                   );
-
                 })}
-
               </div>
-
             </div>
-
           ))}
-
         </div>
 
+        {/* TODO EL RESTO DE TU CÓDIGO (PEDIDO, NOTAS, TOTAL, WHATSAPP) SIGUE EXACTAMENTE IGUAL */}
       </div>
-
     </div>
   );
 }
