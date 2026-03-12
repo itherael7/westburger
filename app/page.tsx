@@ -27,35 +27,35 @@ const menuItems: MenuItem[] = [
   {
     id: 1,
     name: "BURGER CHEESE",
-    description: "Carne smasheada, 4 fetas de queso cheddar.",
+    description: "Carne smasheada, 4 fetas de queso cheddar. (incluye papas)",
     prices: { simple: 10000, doble: 12500 },
   },
   {
     id: 3,
     name: "PROVO-BACON",
     description:
-      "Carne smasheada, queso provolone, bacon ahumado, cebolla caramelizada y salsa barbacoa de la casa.",
+      "Carne smasheada, queso provolone, bacon ahumado, cebolla caramelizada y salsa barbacoa de la casa. (incluye papas)",
     prices: { simple: 10500, doble: 13000 },
   },
   {
     id: 4,
     name: "CLÁSICA",
     description:
-      "Carne smasheada, cheddar, lechuga, pepino encurtido, cebolla y salsa clásica.",
+      "Carne smasheada, cheddar, lechuga, pepino encurtido, cebolla y salsa clásica. (incluye papas)",
     prices: { simple: 10500, doble: 13000 },
   },
   {
     id: 5,
     name: "AMERICANA",
     description:
-      "Carne smasheada, cheddar, lechuga, tomate, cebolla y salsa west.",
+      "Carne smasheada, cheddar, lechuga, tomate, cebolla y salsa west. (incluye papas)",
     prices: { simple: 10500, doble: 13000 },
   },
   {
     id: 6,
     name: "CUARTO",
     description:
-      "Carne smasheada, cheddar, cebolla, mostaza y ketchup.",
+      "Carne smasheada, cheddar, cebolla, mostaza y ketchup. (incluye papas)",
     prices: { simple: 10500, doble: 13000 },
   },
 ];
